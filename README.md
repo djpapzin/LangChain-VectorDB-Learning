@@ -2,6 +2,8 @@
 
 This repository is dedicated to my learning journey through the [LangChain & Vector Databases in Production](https://learn.activeloop.ai/courses/langchain) course offered by Activeloop. The course is part of the Gen AI 360 Foundational Model Certification and focuses on mastering Large Language Models (LLMs) and Vector Databases.
 
+![Screenshot of Activeloop Course](demo.jpeg)
+
 ## Course Overview
 
 - **LangChain**: A robust framework for building applications with LLMs.

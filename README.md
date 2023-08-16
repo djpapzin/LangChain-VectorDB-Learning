@@ -28,12 +28,12 @@ Feel free to explore the code and projects. If you have any questions or suggest
 - [x] From Zero to Hero
 - [x] Large Language Models and LangChain
 - [x] Learning How to Prompt
+- [x] Keeping Knowledge Organized with Indexes
 
 ### Currently Working On
-- [ ] Keeping Knowledge Organized with Indexes
+- [ ] Combining Components Together with Chains
 
 ### Upcoming Modules
-- [ ] Combining Components Together with Chains
 - [ ] Giving Memory to LLMs
 - [ ] Making LLMs Interact with the World Using Tools
 - [ ] Using Language Model as Reasoning Engines with Agents

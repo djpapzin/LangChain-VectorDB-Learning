@@ -61,7 +61,13 @@ texts = text_splitter.split_documents(pages)
 
 embeddings = OpenAIEmbeddings()
 
-db = DeepLake(dataset_path="hub://davitbun/amazon_earnings_6", embedding_function=embeddings, token=os.environ['ACTIVELOOP_TOKEN'])
+# TODO: use your organization id here. (by default, org id is your username)
+my_activeloop_org_id = "djpapzin"
+my_activeloop_dataset_name = "langchain_course_qabot_with_source"
+dataset_path = f"hub://{my_activeloop_org_id}/{my_activeloop_dataset_name}"
+
+db = DeepLake(dataset_path=dataset_path, embedding_function=embeddings)
+
 db.add_documents(texts)
 
 qa = RetrievalQA.from_chain_type(llm=OpenAIChat(model='gpt-3.5-turbo'), chain_type='stuff', retriever=db.as_retriever())

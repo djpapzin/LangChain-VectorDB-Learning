@@ -28,12 +28,11 @@ Feel free to explore the code and projects. If you have any questions or suggest
 - [x] Learning How to Prompt
 - [x] Keeping Knowledge Organized with Indexes
 - [x] Combining Components Together with Chains
+- [x] Giving Memory to LLMs
 
 ### Currently Working On
-- [ ] Giving Memory to LLMs
-
-### Upcoming Modules
 - [ ] Making LLMs Interact with the World Using Tools
+### Upcoming Modules
 - [ ] Using Language Model as Reasoning Engines with Agents
 
 ## License

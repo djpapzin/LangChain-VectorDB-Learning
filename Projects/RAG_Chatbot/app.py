@@ -9,12 +9,6 @@ from langchain.retrievers.document_compressors import CohereRerank
 from langchain.chat_models import AzureChatOpenAI
 import streamlit as st
 import os
-import databutton as db
-import streamlit as st
-import io
-import re
-import sys
-from typing import Any, Callable
 
 os.environ["APIFY_API_TOKEN"] = db.secrets.get("APIFY_API_TOKEN")
 os.environ["COHERE_API_KEY"] = db.secrets.get("COHERE_API_KEY")

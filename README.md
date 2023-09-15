@@ -30,11 +30,7 @@ Feel free to explore the code and projects. If you have any questions or suggest
 - [x] Combining Components Together with Chains
 - [x] Giving Memory to LLMs
 - [x] Making LLMs Interact with the World Using Tools
-
-### Currently Working On
-- [ ] Using Language Model as Reasoning Engines with Agents
-### Upcoming Modules
-
+- [x] Using Language Model as Reasoning Engines with Agents
 
 ## License
 

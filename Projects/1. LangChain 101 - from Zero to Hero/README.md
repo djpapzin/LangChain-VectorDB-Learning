@@ -65,4 +65,4 @@ python tools.py
 
 ## Acknowledgments
 
-This tutorial was adapted from: [LangChain 101: From Zero to Hero](https://learn.activeloop.ai/courses/take/langchain/multimedia/46317643-langchain-101-from-zero-to-hero).
+This tutorial was completed by following the course: [Active-Loop LangChain & Vector Databases in Production](https://learn.activeloop.ai/courses/langchain).

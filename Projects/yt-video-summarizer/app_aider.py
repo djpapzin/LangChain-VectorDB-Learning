@@ -52,10 +52,9 @@ def download_mp4_from_youtube(url):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             result = ydl.extract_info(url, download=True)
             video_title = result['title']
+        return video_title, selected_quality
     else:
-        video_title = None
-
-    return video_title, selected_quality
+        return None, None
 
 # Get YouTube video URL from user
 url = st.text_input("Enter the YouTube video URL:", key="video_url")
@@ -65,7 +64,7 @@ if st.button("Start", key="start_button"):
     if url:
         video_title, selected_quality = download_mp4_from_youtube(url)
 
-        if video_title:
+        if video_title and selected_quality:
             # Show progress updates to the user
             progress_bar = st.progress(0)
             status_text = st.empty()

@@ -56,22 +56,20 @@ def download_mp4_from_youtube(url):
     else:
         return None, None
 
-# Initialize session state
-if 'url' not in st.session_state:
-    st.session_state['url'] = ""
-if 'start_button_pressed' not in st.session_state:
-    st.session_state['start_button_pressed'] = False
-
 # Get YouTube video URL from user
-url = st.text_input("Enter the YouTube video URL:", value=st.session_state['url'], key="video_url")
-st.session_state['url'] = url
+session_state = st.session_state.get('session_state', {})
+url = session_state.get('url', '')
+selected_quality = None
+
+url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
+session_state['url'] = url
 
 if st.button("Start", key="start_button"):
-    st.session_state['start_button_pressed'] = True
+    session_state['start_button_pressed'] = True
 else:
-    st.session_state['start_button_pressed'] = False
+    session_state['start_button_pressed'] = False
 
-if st.session_state.get('start_button_pressed', False):
+if session_state.get('start_button_pressed', False):
     if url:
         video_title, selected_quality = download_mp4_from_youtube(url)
 
@@ -136,18 +134,4 @@ if st.session_state.get('start_button_pressed', False):
     else:
         st.write("Please enter a YouTube video URL.")
 
-# Define the video formats
-video_formats = ["MP4", "AVI", "MOV", "MKV"]
-
-# Initialize the video format in session state if not already set
-if "video_format" not in st.session_state:
-    st.session_state.video_format = video_formats[0] # Default to MP4
-
-# Create a selectbox widget to let the user choose a video format
-selected_format = st.selectbox("Choose a video format", video_formats, key="video_format")
-
-# Display the selected video format
-st.write(f"You have chosen {selected_format} as your video format.")
-
-# Do something with the selected video format
-# ...
+st.session_state['session_state'] = session_state

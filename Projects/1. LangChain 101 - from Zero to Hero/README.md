@@ -2,6 +2,10 @@
 
 This repository contains various projects demonstrating the integration and usage of the LangChain framework with OpenAI and ActiveLoop.
 
+You can access the deployed version [here](https://langchain101-fromzerotohero-fpgypzev42wbq7ivey6y2a.streamlit.app/).
+
+![Screenshot of the App](screenshot.jpeg)
+
 ## Setup
 
 1. **Environment Variables**: Rename the `.env copy` file to `.env`.
@@ -9,6 +13,7 @@ This repository contains various projects demonstrating the integration and usag
 2. **API Keys**:
    - Obtain your OpenAI API key from [OpenAI Platform](https://platform.openai.com/account/api-keys) and input it into the `.env` file.
    - Obtain your ActiveLoop API key from [ActiveLoop](https://app.activeloop.ai/register) and input it into the `.env` file.
+   - Obtain your Google Search API key from [Google Search](https://python.langchain.com/docs/integrations/tools/google_search) and input it in the `.env` file
 
 3. **Requirements**: Install the necessary packages using:
    ```
@@ -19,15 +24,19 @@ This repository contains various projects demonstrating the integration and usag
 
 ```
 .
-├── .env copy
-├── agents.py
-├── vector_stores.py
-├── vector_stores2.py
-├── requirements.txt
-├── chains.py
-├── llms.py
-├── memory.py
-└── tools.py
+│   .env copy
+│   README.md
+│   requirements.txt
+│   screenshot.jpeg
+│   
+└───projects
+    │   agents.py
+    │   app.py
+    │   chains.py
+    │   llms.py
+    │   memory.py
+    │   tools.py
+    │   vector_store.py
 ```
 
 ## Project Descriptions
@@ -40,22 +49,30 @@ This repository contains various projects demonstrating the integration and usag
 
 4. **chains.py**: Illustrates the creation of a chain using the OpenAI language model to suggest company names based on a given product.
 
-5. **vector_store.py** and **vector_store2.py**: These scripts demonstrate the creation and usage of the DeepLake vector store with the OpenAI language model and embeddings.
+5. **vector_store.py**: Demonstrates the creation and usage of the DeepLake vector store with the OpenAI language model and embeddings.
 
 6. **agents.py**: Demonstrates the creation of an AI agent that leverages Google Search as a tool to answer questions about current events.
 
+7. **app.py**: Streamlit application to interactively run the projects.
+
 ## Running the Projects
 
-To run any of the scripts, use the following command:
+To run any of the scripts inside the `projects` folder, use:
 
 ```
-python <script_name>.py
+python projects/<script_name>.py
 ```
 
 For example, to run the `tools.py` script, use:
 
 ```
-python tools.py
+python projects/tools.py
+```
+
+To run the Streamlit app:
+
+```
+streamlit run projects/app.py
 ```
 
 ## Notes
@@ -65,4 +82,4 @@ python tools.py
 
 ## Acknowledgments
 
-This tutorial was completed by following the course: [Active-Loop LangChain & Vector Databases in Production](https://learn.activeloop.ai/courses/langchain).
+This project was created by following the ActiveLoop tutorial on [LangChain 101: From Zero to Hero](https://learn.activeloop.ai/courses/take/langchain/multimedia/46317643-langchain-101-from-zero-to-hero).

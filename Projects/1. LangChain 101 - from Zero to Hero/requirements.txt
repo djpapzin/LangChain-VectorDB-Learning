@@ -4,3 +4,5 @@ openai
 tiktoken
 deeplake
 python-dotenv
+streamlit
+google-api-python-client

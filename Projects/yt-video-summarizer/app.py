@@ -12,10 +12,6 @@ from langchain.docstore.document import Document
 from langchain.chains.summarize import load_summarize_chain
 import textwrap
 
-# Import streamlit library and components
-import streamlit as st
-from streamlit_player import st_player
-
 # Load environment variables (API keys in this case)
 load_dotenv()
 
@@ -60,68 +56,46 @@ def download_mp4_from_youtube(url):
 
     return video_title
 
-# Set the title of the streamlit app
-st.title("YouTube Video Summarizer")
+# Get YouTube video URL from user
+url = input("Enter the YouTube video URL: ")
+video_title = download_mp4_from_youtube(url)
 
-# Get YouTube video URL from user using a text input widget
-url = st.text_input("Enter the YouTube video URL: ")
+# Load the Whisper model for transcription
+model = whisper.load_model("tiny")
+result = model.transcribe(f"{video_title}.mp4")
 
-# Check if the URL is valid and not empty
-if url and yt_dlp.is_url(url):
-    # Download the video from YouTube and get the title
-    video_title = download_mp4_from_youtube(url)
+# Extract transcription from the result
+transcription = result['text']
 
-    # Display the video using a player component
-    st_player(f"{video_title}.mp4")
+# Save the transcription to a file
+with open(f'{video_title}_transcription.txt', 'w') as file:
+    file.write(transcription)
 
-    # Load the Whisper model for transcription
-    model = whisper.load_model("tiny")
-    result = model.transcribe(f"{video_title}.mp4")
+# Initialize the LangChain model for summarization
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-    # Extract transcription from the result
-    transcription = result['text']
+# Split the transcription text into manageable chunks
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000, chunk_overlap=0, separators=[" ", ",", "\n"]
+)
+with open(f'{video_title}_transcription.txt') as f:
+    text = f.read()
+texts = text_splitter.split_text(text)
+docs = [Document(page_content=t) for t in texts[:4]]
 
-    # Save the transcription to a file
-    with open(f'{video_title}_transcription.txt', 'w') as file:
-        file.write(transcription)
+# # Define the prompt for the 'refine' summarization chain
+# prompt_template = """Write a concise bullet point summary of the following:
+# {text}
+# CONSCISE SUMMARY IN BULLET POINTS:"""
+# BULLET_POINT_PROMPT = PromptTemplate(template=prompt_template, 
+#                         input_variables=["text"])
+# chain = load_summarize_chain(llm, chain_type="refine", refine_prompt=BULLET_POINT_PROMPT)
 
-    # Initialize the LangChain model for summarization
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+# Use the 'refine' summarization chain with the custom prompt
+chain = load_summarize_chain(llm, chain_type="refine")
+output_summary = chain.run(docs)
+wrapped_text = textwrap.fill(output_summary, width=100)
 
-    # Split the transcription text into manageable chunks
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000, chunk_overlap=0, separators=[" ", ",", "\n"]
-    )
-    with open(f'{video_title}_transcription.txt') as f:
-        text = f.read()
-    texts = text_splitter.split_text(text)
-    docs = [Document(page_content=t) for t in texts[:4]]
-
-    # Define the prompt for the 'refine' summarization chain
-    prompt_template = """Write a concise bullet point summary of the following:
-{text}
-CONSCISE SUMMARY IN BULLET POINTS:"""
-BULLET_POINT_PROMPT = PromptTemplate(template=prompt_template, 
-                        input_variables=["text"])
-chain = load_summarize_chain(llm, chain_type="refine", refine_prompt=BULLET_POINT_PROMPT)
-
-# Use the 'refine' summarization chain to generate summaries for each chunk of text
-summaries = []
-for doc in docs:
-  summary_doc, _ = chain(doc)
-  summaries.append(summary_doc.page_content)
-
-# Join the summaries into one string and wrap it to fit in a column width of 80 characters 
-summary = "\n".join(summaries)
-summary_wrapped = "\n".join(textwrap.wrap(summary, width=80))
-
-# Display the transcription and the summary using expander components
-with st.expander("Transcription"):
-  st.write(transcription)
-
-with st.expander("Summary"):
-  st.write(summary_wrapped)
-
-# Display buttons to download the transcription and the summary as text files
-st.download_button(label="Download transcription", data=transcription, file_name=f"{video_title}_transcription.txt", mime="text/plain")
-st.download_button(label="Download summary", data=summary, file_name=f"{video_title}_summary.txt", mime="text/plain")
+# Print the refined summary
+print("\nSummary:")
+print(wrapped_text)

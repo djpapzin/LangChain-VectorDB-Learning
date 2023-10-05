@@ -117,3 +117,4 @@ if st.button("Start"):
         # Expand icon to display the rest of the transcription
         with st.expander("Transcription", expanded=True):
             st.write(transcription)
+    

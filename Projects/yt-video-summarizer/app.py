@@ -67,7 +67,7 @@ st.title("YouTube Video Summarizer")
 url = st.text_input("Enter the YouTube video URL: ")
 
 # Check if the URL is valid and not empty
-if url and yt_dlp.validate_url(url):
+if url and yt_dlp.is_url(url):
     # Download the video from YouTube and get the title
     video_title = download_mp4_from_youtube(url)
 

@@ -72,7 +72,7 @@ else:
     st.session_state['start_button_pressed'] = False
 
 if st.session_state.get('start_button_pressed', False):
-    if url:
+    if url and selected_quality:
         video_title, selected_quality = download_mp4_from_youtube(url)
 
         if video_title and selected_quality:

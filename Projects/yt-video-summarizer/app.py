@@ -39,7 +39,7 @@ def download_mp4_from_youtube(url):
     available_formats_str = sorted(list(set(available_formats_str)))
 
     # Display the radio buttons
-    selected_quality = st.radio("Select video quality:", available_formats_str)
+    selected_quality = st.radio("Select video quality:", available_formats_str, index=None)
 
     # Download the video based on the selected quality
     selected_format = available_formats[available_formats_str.index(selected_quality)]
@@ -61,6 +61,10 @@ selected_quality = None
 if st.button("Start"):
     if url:
         video_title, selected_quality = download_mp4_from_youtube(url)
+
+        # Show progress updates to the user
+        progress_bar = st.progress(0)
+        status_text = st.empty()
 
         # Load the Whisper model for transcription
         model = whisper.load_model("tiny")

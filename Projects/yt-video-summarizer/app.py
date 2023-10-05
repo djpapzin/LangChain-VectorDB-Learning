@@ -64,54 +64,54 @@ selected_quality = None
 if url:
     selected_quality = download_mp4_from_youtube(url, selected_quality)
 
-# Load the Whisper model for transcription
-model = whisper.load_model("tiny")
-result = model.transcribe(f"{selected_quality}.mp4")
+    # Load the Whisper model for transcription
+    model = whisper.load_model("tiny")
+    result = model.transcribe(f"{selected_quality}.mp4")
 
-# Extract transcription from the result
-transcription = result['text']
+    # Extract transcription from the result
+    transcription = result['text']
 
-# Save the transcription to a file
-with open(f'{selected_quality}_transcription.txt', 'w') as file:
-    file.write(transcription)
+    # Save the transcription to a file
+    with open(f'{selected_quality}_transcription.txt', 'w') as file:
+        file.write(transcription)
 
-# Initialize the LangChain model for summarization
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    # Initialize the LangChain model for summarization
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-# Split the transcription text into manageable chunks
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000, chunk_overlap=0, separators=[" ", ",", "\n"]
-)
-with open(f'{selected_quality}_transcription.txt') as f:
-    text = f.read()
-texts = text_splitter.split_text(text)
-docs = [Document(page_content=t) for t in texts[:4]]
-
-# Use the 'refine' summarization chain with the custom prompt
-chain = load_summarize_chain(llm, chain_type="refine")
-output_summary = chain.run(docs)
-wrapped_text = textwrap.fill(output_summary, width=100)
-
-# Display the refined summary
-st.subheader("Summary:")
-st.write(wrapped_text)
-
-# Button to download transcript
-if st.button("Download Transcript"):
-    st.download_button(
-        label="Download Transcript",
-        data=f'{selected_quality}_transcription.txt',
-        file_name=f'{selected_quality}_transcription.txt',
+    # Split the transcription text into manageable chunks
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=0, separators=[" ", ",", "\n"]
     )
+    with open(f'{selected_quality}_transcription.txt') as f:
+        text = f.read()
+    texts = text_splitter.split_text(text)
+    docs = [Document(page_content=t) for t in texts[:4]]
 
-# Button to download summary
-if st.button("Download Summary"):
-    st.download_button(
-        label="Download Summary",
-        data=wrapped_text,
-        file_name=f'{selected_quality}_summary.txt',
-    )
+    # Use the 'refine' summarization chain with the custom prompt
+    chain = load_summarize_chain(llm, chain_type="refine")
+    output_summary = chain.run(docs)
+    wrapped_text = textwrap.fill(output_summary, width=100)
 
-# Expand icon to display the rest of the transcription
-st.expander("Transcription", expanded=True):
-    st.write(transcription)
+    # Display the refined summary
+    st.subheader("Summary:")
+    st.write(wrapped_text)
+
+    # Button to download transcript
+    if st.button("Download Transcript"):
+        st.download_button(
+            label="Download Transcript",
+            data=f'{selected_quality}_transcription.txt',
+            file_name=f'{selected_quality}_transcription.txt',
+        )
+
+    # Button to download summary
+    if st.button("Download Summary"):
+        st.download_button(
+            label="Download Summary",
+            data=wrapped_text,
+            file_name=f'{selected_quality}_summary.txt',
+        )
+
+    # Expand icon to display the rest of the transcription
+    st.expander("Transcription", expanded=True):
+        st.write(transcription)

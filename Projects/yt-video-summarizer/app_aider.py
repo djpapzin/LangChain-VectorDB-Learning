@@ -23,41 +23,16 @@ openai_api_key = os.environ['OPENAI_API_KEY']
 activeloop_token = os.environ['ACTIVELOOP_TOKEN']
 
 # Function to download MP4 videos from YouTube
-def download_mp4_from_youtube(url):
-    # Extract video information without downloading
-    with yt_dlp.YoutubeDL() as ydl:
-        result = ydl.extract_info(url, download=False)
-
-    # Parse and display available video quality options
-    available_formats = []
-    for format in result['formats']:
-        if format['ext'] == 'mp4' and 'height' in format:
-            height = format['height']
-            available_formats.append(str(height) + 'p')
-    available_formats = sorted(list(set(available_formats)))
-
-    # Add "Select preferred video format" to the beginning of the list
-    options = ["Select preferred video format"] + available_formats
-
-    # Display the selectbox
-    selected_quality = st.selectbox("Select video quality:", options, index=0, key="video_quality")
-
-    # Store the selected video format in session state
-    st.session_state['selected_quality'] = selected_quality
-
-    # Download the video based on the selected quality
-    if selected_quality != "Select preferred video format":
-        ydl_opts = {
-            'format': f'bestvideo[height={selected_quality[:-1]}][ext=mp4]+bestaudio[ext=m4a]/best[height={selected_quality[:-1]}][ext=mp4]',
-            'outtmpl': '%(title)s.mp4',
-            'quiet': True,
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            result = ydl.extract_info(url, download=True)
-            video_title = result['title']
-        return video_title, selected_quality
-    else:
-        return None, None
+def download_mp4_from_youtube(url, selected_quality):
+    ydl_opts = {
+        'format': f'bestvideo[height={selected_quality[:-1]}][ext=mp4]+bestaudio[ext=m4a]/best[height={selected_quality[:-1]}][ext=mp4]',
+        'outtmpl': '%(title)s.mp4',
+        'quiet': True,
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        result = ydl.extract_info(url, download=True)
+        video_title = result['title']
+    return video_title
 
 # Get YouTube video URL from user
 url = st.session_state.get('url', '')
@@ -66,15 +41,26 @@ selected_quality = st.session_state.get('selected_quality', None)
 url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
 st.session_state['url'] = url
 
-if st.button("Start"):
-    st.session_state['start_button_pressed'] = True
+# Check if video has already been downloaded
+if 'video_downloaded' not in st.session_state:
+    st.session_state['video_downloaded'] = False
+
+if not st.session_state['video_downloaded']:
+    options = ["Select preferred video format"] + available_formats
+    selected_quality = st.selectbox("Select video quality:", options, index=0, key="video_quality")
+    st.session_state['selected_quality'] = selected_quality
+
+    if st.button("Start", key="start_button"):
+        st.session_state['start_button_pressed'] = True
+        if selected_quality != "Select preferred video format":
+            video_title = download_mp4_from_youtube(url, selected_quality)
+            st.session_state['video_downloaded'] = True
+            st.session_state['video_title'] = video_title
 else:
-    st.session_state['start_button_pressed'] = False
+    video_title = st.session_state['video_title']
 
 if st.session_state.get('start_button_pressed', False):
     if url and selected_quality:
-        video_title, selected_quality = download_mp4_from_youtube(url)
-
         if video_title and selected_quality:
             # Show progress updates to the user
             progress_bar = st.progress(0)

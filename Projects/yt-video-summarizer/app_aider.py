@@ -56,20 +56,20 @@ def download_mp4_from_youtube(url):
     else:
         return None, None
 
-# Get YouTube video URL from user
-session_state = st.session_state.get('session_state', {})
-url = session_state.get('url', '')
-selected_quality = None
+# Initialize session state
+if 'session_state' not in st.session_state:
+    st.session_state['session_state'] = {}
 
-url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
-session_state['url'] = url
+# Get YouTube video URL from user
+url = st.text_input("Enter the YouTube video URL:", value=st.session_state['url'], key="video_url")
+st.session_state['url'] = url
 
 if st.button("Start", key="start_button"):
-    session_state['start_button_pressed'] = True
+    st.session_state['start_button_pressed'] = True
 else:
-    session_state['start_button_pressed'] = False
+    st.session_state['start_button_pressed'] = False
 
-if session_state.get('start_button_pressed', False):
+if st.session_state.get('start_button_pressed', False):
     if url:
         video_title, selected_quality = download_mp4_from_youtube(url)
 
@@ -133,5 +133,3 @@ if session_state.get('start_button_pressed', False):
             st.write("Please select a video quality.")
     else:
         st.write("Please enter a YouTube video URL.")
-
-st.session_state['session_state'] = session_state

@@ -109,7 +109,7 @@ if st.session_state.get('start_button_pressed', False):
             wrapped_text = textwrap.fill(output_summary, width=100)
 
             # Expand icon to display the rest of the transcription
-            with st.expander("Transcription", expanded=True):
+            with st.expander("Transcription", expanded=False):
                 st.write(transcription)
 
             # Button to download transcript
@@ -118,6 +118,7 @@ if st.session_state.get('start_button_pressed', False):
                     label="Download Transcript",
                     data=f'{video_title}_transcription.txt',
                     file_name=f'{video_title}_transcription.txt',
+                    on_click=None
                 )
 
             # Display the refined summary
@@ -130,6 +131,7 @@ if st.session_state.get('start_button_pressed', False):
                     label="Download Summary",
                     data=wrapped_text,
                     file_name=f'{video_title}_summary.txt',
+                    on_click=None
                 )
 
         else:

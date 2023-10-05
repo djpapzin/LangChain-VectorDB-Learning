@@ -39,7 +39,7 @@ def download_mp4_from_youtube(url):
     available_formats_str = sorted(list(set(available_formats_str)))
 
     # Display the radio buttons
-    selected_quality = st.radio("Select video quality:", available_formats_str, index=None)
+    selected_quality = st.radio("Select video quality:", available_formats_str, index=0)
 
     # Download the video based on the selected quality
     if selected_quality != "Select preferred video format":

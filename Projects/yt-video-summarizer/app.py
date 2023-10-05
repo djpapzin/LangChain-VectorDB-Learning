@@ -30,18 +30,21 @@ def download_mp4_from_youtube(url):
 
     # Parse and display available video quality options
     available_formats_str = []
+    available_formats = []
     for format in result['formats']:
         if format['ext'] == 'mp4' and 'height' in format:
             height = format['height']
             available_formats_str.append(str(height) + 'p')
+            available_formats.append(format)
     available_formats_str = sorted(list(set(available_formats_str)))
 
     # Display the radio buttons
     selected_quality = st.radio("Select video quality:", available_formats_str)
 
     # Download the video based on the selected quality
+    selected_format = available_formats[available_formats_str.index(selected_quality)]
     ydl_opts = {
-        'format': f'bestvideo[height={selected_quality}][ext=mp4]+bestaudio[ext=m4a]/best[height={selected_quality}][ext=mp4]',
+        'format': selected_format['format_id'],
         'outtmpl': '%(title)s.mp4',
         'quiet': True,
     }

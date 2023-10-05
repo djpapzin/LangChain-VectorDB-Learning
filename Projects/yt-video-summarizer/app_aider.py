@@ -113,7 +113,7 @@ if st.session_state.get('start_button_pressed', False):
                 st.write(transcription)
 
             # Button to download transcript
-            if st.button("Download Transcript"):
+            if st.button("Download Transcript", key="download_transcript"):
                 st.download_button(
                     label="Download Transcript",
                     data=f'{video_title}_transcription.txt',
@@ -126,7 +126,7 @@ if st.session_state.get('start_button_pressed', False):
             st.write(wrapped_text)
 
             # Button to download summary
-            if st.button("Download Summary"):
+            if st.button("Download Summary", key="download_summary"):
                 st.download_button(
                     label="Download Summary",
                     data=wrapped_text,

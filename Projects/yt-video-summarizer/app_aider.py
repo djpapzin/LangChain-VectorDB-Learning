@@ -66,7 +66,7 @@ selected_quality = st.session_state.get('selected_quality', None)
 url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
 st.session_state['url'] = url
 
-if st.button("Start", key="start_button"):
+if st.checkbox("Start", key="start_checkbox"):
     st.session_state['start_button_pressed'] = True
 else:
     st.session_state['start_button_pressed'] = False

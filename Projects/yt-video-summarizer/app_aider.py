@@ -66,7 +66,7 @@ selected_quality = st.session_state.get('selected_quality', None)
 url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
 st.session_state['url'] = url
 
-if st.checkbox("Start", key="start_checkbox"):
+if st.button("Start"):
     st.session_state['start_button_pressed'] = True
 else:
     st.session_state['start_button_pressed'] = False
@@ -108,9 +108,9 @@ if st.session_state.get('start_button_pressed', False):
             output_summary = chain.run(docs)
             wrapped_text = textwrap.fill(output_summary, width=100)
 
-            # Display the refined summary
-            st.subheader("Summary:")
-            st.write(wrapped_text)
+            # Expand icon to display the rest of the transcription
+            with st.expander("Transcription", expanded=True):
+                st.write(transcription)
 
             # Button to download transcript
             if st.button("Download Transcript"):
@@ -120,6 +120,10 @@ if st.session_state.get('start_button_pressed', False):
                     file_name=f'{video_title}_transcription.txt',
                 )
 
+            # Display the refined summary
+            st.subheader("Summary:")
+            st.write(wrapped_text)
+
             # Button to download summary
             if st.button("Download Summary"):
                 st.download_button(
@@ -128,9 +132,6 @@ if st.session_state.get('start_button_pressed', False):
                     file_name=f'{video_title}_summary.txt',
                 )
 
-            # Expand icon to display the rest of the transcription
-            with st.expander("Transcription", expanded=True):
-                st.write(transcription)
         else:
             st.write("Please select a video quality.")
     else:

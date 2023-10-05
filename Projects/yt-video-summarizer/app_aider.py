@@ -40,7 +40,7 @@ def download_mp4_from_youtube(url):
     options = ["Select preferred video format"] + available_formats
 
     # Display the radio buttons
-    selected_quality = st.radio("Select video quality:", options, index=0)
+    selected_quality = st.radio("Select video quality:", options, index=0, key="video_quality")
 
     # Download the video based on the selected quality
     if selected_quality != "Select preferred video format":
@@ -58,10 +58,10 @@ def download_mp4_from_youtube(url):
     return video_title, selected_quality
 
 # Get YouTube video URL from user
-url = st.text_input("Enter the YouTube video URL: ")
+url = st.text_input("Enter the YouTube video URL:", key="video_url")
 selected_quality = None
 
-if st.button("Start"):
+if st.button("Start", key="start_button"):
     if url:
         video_title, selected_quality = download_mp4_from_youtube(url)
 

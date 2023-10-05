@@ -11,30 +11,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.chains.summarize import load_summarize_chain
 import textwrap
+import streamlit as st
 
 # Function to download MP4 videos from YouTube
-def download_mp4_from_youtube(url):
-    # Define options to list available video formats
-    ydl_opts = {
-        'listformats': True,
-    }
-    # Extract video information without downloading
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        result = ydl.extract_info(url, download=False)
-
-    # Parse and display available video quality options
-    print("Available video quality options:")
-    available_formats = set()
-    for format in result['formats']:
-        if format['ext'] == 'mp4' and 'height' in format:
-            height = format['height']
-            available_formats.add(height)
-    available_formats_str = [str(height) + 'p' for height in sorted(available_formats)]
-    print(', '.join(available_formats_str))
-
-    # Get user input for desired video quality
-    selected_quality = input("Enter the desired video quality: ")
-
+def download_mp4_from_youtube(url, selected_quality):
     # Define options for video download based on user's choice
     ydl_opts = {
         'format': f'bestvideo[height={selected_quality}][ext=mp4]+bestaudio[ext=m4a]/best[height={selected_quality}][ext=mp4]',
@@ -50,9 +30,9 @@ def download_mp4_from_youtube(url):
     return video_title
 
 # Function to summarize a YouTube video
-def summarize_youtube_video(url):
+def summarize_youtube_video(url, selected_quality):
     # Download the video from YouTube and get the title
-    video_title = download_mp4_from_youtube(url)
+    video_title = download_mp4_from_youtube(url, selected_quality)
 
     # Load the Whisper model for transcription
     model = whisper.load_model("tiny")
@@ -95,7 +75,7 @@ CONSCISE SUMMARY IN BULLET POINTS:"""
     summary = "\n".join(summaries)
     summary_wrapped = "\n".join(textwrap.wrap(summary, width=80))
 
-    return transcription, summary_wrapped
+    return transcription, summary_wrapped, video_title
 
 # Function to run the YouTube video summarizer app
 def run_youtube_summarizer():
@@ -114,19 +94,40 @@ def run_youtube_summarizer():
 
     # Check if the URL is valid and not empty
     if url and yt_dlp.validate_url(url):
-        # Summarize the YouTube video
-        transcription, summary = summarize_youtube_video(url)
+        # Define options to list available video formats
+        ydl_opts = {
+            'listformats': True,
+        }
+        # Extract video information without downloading
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            result = ydl.extract_info(url, download=False)
 
-        # Display the video using a player component
-        st_player(f"{video_title}.mp4")
+        # Parse and display available video quality options
+        available_formats = set()
+        for format in result['formats']:
+            if format['ext'] == 'mp4' and 'height' in format:
+                height = format['height']
+                available_formats.add(height)
+        available_formats_str = [str(height) + 'p' for height in sorted(available_formats)]
 
-        # Display the transcription and the summary using expander components
-        with st.expander("Transcription"):
-            st.write(transcription)
+        # Get user input for desired video quality
+        selected_quality = st.radio("Select video quality:", available_formats_str)
 
-        with st.expander("Summary"):
-            st.write(summary)
+        # Button to start the process of transcribing and summarizing
+        if st.button("Start"):
+            # Summarize the YouTube video
+            transcription, summary, video_title = summarize_youtube_video(url, selected_quality)
 
-        # Display buttons to download the transcription and the summary as text files
-        st.download_button(label="Download transcription", data=transcription, file_name=f"{video_title}_transcription.txt", mime="text/plain")
-        st.download_button(label="Download summary", data=summary, file_name=f"{video_title}_summary.txt", mime="text/plain")
+            # Display the video using a player component
+            st.video(f"{video_title}.mp4")
+
+            # Display the transcription and the summary using expander components
+            with st.expander("Transcription"):
+                st.write(transcription)
+
+            with st.expander("Summary"):
+                st.write(summary)
+
+            # Button to download the transcription and the summary as text files
+            st.download_button(label="Download transcription", data=transcription, file_name=f"{video_title}_transcription.txt", mime="text/plain")
+            st.download_button(label="Download summary", data=summary, file_name=f"{video_title}_summary.txt", mime="text/plain")

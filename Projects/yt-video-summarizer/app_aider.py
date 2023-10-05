@@ -46,6 +46,7 @@ if 'video_downloaded' not in st.session_state:
     st.session_state['video_downloaded'] = False
 
 if not st.session_state['video_downloaded']:
+    available_formats = ["720p", "480p", "360p"]  # Define the available video formats here
     options = ["Select preferred video format"] + available_formats
     selected_quality = st.selectbox("Select video quality:", options, index=0, key="video_quality")
     st.session_state['selected_quality'] = selected_quality

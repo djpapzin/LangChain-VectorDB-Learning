@@ -135,3 +135,19 @@ if st.session_state.get('start_button_pressed', False):
             st.write("Please select a video quality.")
     else:
         st.write("Please enter a YouTube video URL.")
+
+# Define the video formats
+video_formats = ["MP4", "AVI", "MOV", "MKV"]
+
+# Initialize the video format in session state if not already set
+if "video_format" not in st.session_state:
+    st.session_state.video_format = video_formats[0] # Default to MP4
+
+# Create a selectbox widget to let the user choose a video format
+selected_format = st.selectbox("Choose a video format", video_formats, key="video_format")
+
+# Display the selected video format
+st.write(f"You have chosen {selected_format} as your video format.")
+
+# Do something with the selected video format
+# ...

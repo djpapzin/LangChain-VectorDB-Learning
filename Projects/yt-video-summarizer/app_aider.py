@@ -39,8 +39,11 @@ def download_mp4_from_youtube(url):
     # Add "Select preferred video format" to the beginning of the list
     options = ["Select preferred video format"] + available_formats
 
-    # Display the radio buttons
+    # Display the selectbox
     selected_quality = st.selectbox("Select video quality:", options, index=0, key="video_quality")
+
+    # Store the selected video format in session state
+    st.session_state['selected_quality'] = selected_quality
 
     # Download the video based on the selected quality
     if selected_quality != "Select preferred video format":
@@ -58,7 +61,7 @@ def download_mp4_from_youtube(url):
 
 # Get YouTube video URL from user
 url = st.session_state.get('url', '')
-selected_quality = None
+selected_quality = st.session_state.get('selected_quality', None)
 
 url = st.text_input("Enter the YouTube video URL:", value=url, key="video_url")
 st.session_state['url'] = url

@@ -95,6 +95,10 @@ if st.session_state.get('start_button_pressed', False):
             output_summary = chain.run(docs)
             wrapped_text = textwrap.fill(output_summary, width=100)
 
+            # Update progress bar and status text
+            progress_bar.progress(50)
+            status_text.text("Transcription complete")
+
             # Expand icon to display the rest of the transcription
             with st.expander("Transcription", expanded=False):
                 st.write(transcription)
@@ -120,6 +124,10 @@ if st.session_state.get('start_button_pressed', False):
                     file_name=f'{video_title}_summary.txt',
                     on_click=None
                 )
+
+            # Update progress bar and status text
+            progress_bar.progress(100)
+            status_text.text("Summary complete")
 
         else:
             st.write("Please select a video quality.")

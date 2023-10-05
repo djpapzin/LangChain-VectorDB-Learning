@@ -1,8 +1,6 @@
-langchain==0.0.208 
-deeplake
-openai
-tiktoken
-yt_dlp==2023.6.21
-openai-whisper==20230314
+dotenv
 streamlit
-streamlit_player
+yt-dlp
+whisper
+langchain
+textwrap3

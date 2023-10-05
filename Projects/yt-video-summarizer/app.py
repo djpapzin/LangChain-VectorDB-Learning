@@ -23,7 +23,7 @@ openai_api_key = os.environ['OPENAI_API_KEY']
 activeloop_token = os.environ['ACTIVELOOP_TOKEN']
 
 # Function to download MP4 videos from YouTube
-def download_mp4_from_youtube(url, selected_quality):
+def download_mp4_from_youtube(url):
     # Define options to list available video formats
     ydl_opts = {
         'listformats': True,
@@ -43,19 +43,17 @@ def download_mp4_from_youtube(url, selected_quality):
     # Get user input for desired video quality
     selected_quality = st.radio("Select video quality:", available_formats_str, index=-1)
 
-    # Define options for video download based on user's choice
+    # Download the video based on the selected quality
     ydl_opts = {
         'format': f'bestvideo[height={selected_quality}][ext=mp4]+bestaudio[ext=m4a]/best[height={selected_quality}][ext=mp4]',
         'outtmpl': '%(title)s.mp4',
         'quiet': True,
     }
-
-    # Download the video based on the selected quality
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(url, download=True)
         video_title = result['title']
 
-    return video_title
+    return video_title, selected_quality
 
 # Get YouTube video URL from user
 url = st.text_input("Enter the YouTube video URL: ")
@@ -63,17 +61,17 @@ selected_quality = None
 
 if st.button("Start"):
     if url:
-        selected_quality = download_mp4_from_youtube(url, selected_quality)
+        video_title, selected_quality = download_mp4_from_youtube(url)
 
         # Load the Whisper model for transcription
         model = whisper.load_model("tiny")
-        result = model.transcribe(f"{selected_quality}.mp4")
+        result = model.transcribe(f"{video_title}.mp4")
 
         # Extract transcription from the result
         transcription = result['text']
 
         # Save the transcription to a file
-        with open(f'{selected_quality}_transcription.txt', 'w') as file:
+        with open(f'{video_title}_transcription.txt', 'w') as file:
             file.write(transcription)
 
         # Initialize the LangChain model for summarization
@@ -83,7 +81,7 @@ if st.button("Start"):
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000, chunk_overlap=0, separators=[" ", ",", "\n"]
         )
-        with open(f'{selected_quality}_transcription.txt') as f:
+        with open(f'{video_title}_transcription.txt') as f:
             text = f.read()
         texts = text_splitter.split_text(text)
         docs = [Document(page_content=t) for t in texts[:4]]
@@ -101,8 +99,8 @@ if st.button("Start"):
         if st.button("Download Transcript"):
             st.download_button(
                 label="Download Transcript",
-                data=f'{selected_quality}_transcription.txt',
-                file_name=f'{selected_quality}_transcription.txt',
+                data=f'{video_title}_transcription.txt',
+                file_name=f'{video_title}_transcription.txt',
             )
 
         # Button to download summary
@@ -110,7 +108,7 @@ if st.button("Start"):
             st.download_button(
                 label="Download Summary",
                 data=wrapped_text,
-                file_name=f'{selected_quality}_summary.txt',
+                file_name=f'{video_title}_summary.txt',
             )
 
         # Expand icon to display the rest of the transcription

@@ -113,5 +113,5 @@ if url:
         )
 
     # Expand icon to display the rest of the transcription
-    st.expander("Transcription", expanded=True):
+    with st.expander("Transcription", expanded=True):
         st.write(transcription)

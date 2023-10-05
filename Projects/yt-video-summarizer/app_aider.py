@@ -57,12 +57,10 @@ def download_mp4_from_youtube(url):
         return None, None
 
 # Initialize session state
-if 'session_state' not in st.session_state:
-    st.session_state['session_state'] = {}
-
-# Initialize the 'url' key in the session state
 if 'url' not in st.session_state:
     st.session_state['url'] = ""
+if 'start_button_pressed' not in st.session_state:
+    st.session_state['start_button_pressed'] = False
 
 # Get YouTube video URL from user
 url = st.text_input("Enter the YouTube video URL:", value=st.session_state['url'], key="video_url")

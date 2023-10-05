@@ -41,7 +41,7 @@ def download_mp4_from_youtube(url):
     available_formats_str = [str(height) + 'p' for height in sorted(available_formats)]
 
     # Get user input for desired video quality
-    selected_quality = st.radio("Select video quality:", available_formats_str, index=-1)
+    selected_quality = st.radio("Select video quality:", available_formats_str, index=None)
 
     # Download the video based on the selected quality
     ydl_opts = {

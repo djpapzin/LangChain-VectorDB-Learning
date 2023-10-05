@@ -123,3 +123,5 @@ if st.button("Start"):
                 st.write(transcription)
         else:
             st.write("Please select a video quality.")
+    else:
+        st.write("Please enter a YouTube video URL.")

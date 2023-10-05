@@ -39,7 +39,7 @@ def download_mp4_from_youtube(url):
     # Add "Select preferred video format" to the beginning of the list
     options = ["Select preferred video format"] + available_formats
 
-    # Display the radio buttons
+    # Display the selectbox for video quality
     selected_quality = st.selectbox("Select video quality:", options, index=0, key="video_quality")
 
     # Download the video based on the selected quality

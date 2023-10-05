@@ -31,15 +31,11 @@ def download_mp4_from_youtube(url):
             available_formats.add(height)
     available_formats_str = [str(height) + 'p' for height in sorted(available_formats)]
 
-    # Add a placeholder to the beginning of the list
-    placeholder = "Select an option..."
-    options = [placeholder] + available_formats_str
-
     # Display the radio buttons with the available formats
-    selected_quality = st.radio("Select video quality:", options)
+    selected_quality = st.radio("Select video quality:", available_formats_str)
 
     # If the user hasn't made a selection, set selected_quality to None
-    if selected_quality == placeholder:
+    if selected_quality == "Select an option...":
         selected_quality = None
     
     # Download the video based on the selected quality

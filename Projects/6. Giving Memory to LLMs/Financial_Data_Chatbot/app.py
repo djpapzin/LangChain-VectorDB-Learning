@@ -5,7 +5,7 @@ from langchain.vectorstores import DeepLake
 from langchain.text_splitter import CharacterTextSplitter
 from langchain import OpenAI 
 from langchain.chains import RetrievalQA
-from langchain.llms import OpenAIChat
+from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PagedPDFSplitter
 
 load_dotenv()
@@ -70,6 +70,6 @@ db = DeepLake(dataset_path=dataset_path, embedding_function=embeddings)
 
 db.add_documents(texts)
 
-qa = RetrievalQA.from_chain_type(llm=OpenAIChat(model='gpt-3.5-turbo'), chain_type='stuff', retriever=db.as_retriever())
+qa = RetrievalQA.from_chain_type(llm=ChatOpenAI(model='gpt-3.5-turbo'), chain_type='stuff', retriever=db.as_retriever())
 
 qa.run("Combine total revenue in 2020?")

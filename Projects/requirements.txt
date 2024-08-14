@@ -8,3 +8,4 @@ beautifulsoup4==4.11.2
 audio-recorder-streamlit==0.0.8
 streamlit-chat==0.0.2.2
 langchain-google-genai
+python-dotenv

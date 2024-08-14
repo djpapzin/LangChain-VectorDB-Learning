@@ -1,19 +1,18 @@
-from langchain.chat_models import ChatGemini # Import ChatGemini instead of ChatOpenAI
+from langchain_google_genai import GoogleGenerativeAI # Import GoogleGenerativeAI from langchain_google_genai 
 from langchain.schema import ( # Import HumanMessage and SystemMessage from langchain.schema
   HumanMessage,
   SystemMessage
 )
-import getpass
+from dotenv import load_dotenv # Import load_dotenv
 import os
 
-if "GEMINI_API_KEY" not in os.environ:
-    os.environ["GEMINI_API_KEY"] = getpass.getpass("Provide your GEMINI API Key")
+load_dotenv() # Load environment variables from .env file
 
-chat = ChatGemini(model_name="gemini-1.5-pro-exp-0801", temperature=0) # Create a ChatGemini object with the specified model name and temperature
+llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GOOGLE_API_KEY")) # Create GoogleGenerativeAI instance
 
 messages = [ # Create a list of messages
 	SystemMessage(content="You are a helpful assistant that translates English to French."), # Create a SystemMessage with the content "You are a helpful assistant that translates English to French."
 	HumanMessage(content="Translate the following sentence: I love programming.") # Create a HumanMessage with the content "Translate the following sentence: I love programming."
 ]
 
-chat(messages) # Call the chat object with the list of messages
+llm(messages) # Call the llm object with the list of messages

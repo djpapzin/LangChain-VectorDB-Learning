@@ -1,7 +1,15 @@
 from langchain import PromptTemplate
 from langchain import FewShotPromptTemplate
-from langchain.chat_models import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI # Import ChatGoogleGenerativeAI
 from langchain import LLMChain
+from dotenv import load_dotenv 
+import os
+
+# Load environment variables from .env file
+load_dotenv() 
+
+# Create ChatGoogleGenerativeAI instance
+llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GEMINI_API_KEY")) 
 
 # create our examples dictionery
 examples = [
@@ -49,7 +57,7 @@ few_shot_prompt_template = FewShotPromptTemplate(
 )
 
 # load the model
-chat = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.9)
+chat = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.9, google_api_key=os.getenv("GEMINI_API_KEY")) # Use 'gemini-pro' instead of 'gemini'
 
 chain = LLMChain(llm=chat, prompt=few_shot_prompt_template, verbose=True)
 

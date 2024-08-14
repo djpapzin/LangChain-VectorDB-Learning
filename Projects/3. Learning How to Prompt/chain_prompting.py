@@ -1,8 +1,20 @@
 from langchain import PromptTemplate, LLMChain
-from langchain.llms import OpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+import os
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize LLM
-llm = OpenAI(model_name="text-davinci-003", temperature=0)
+api_key = os.getenv("GEMINI_API_KEY")
+llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
+print(
+    llm.invoke(
+        "What are some of the pros and cons of Python as a programming language?"
+    )
+)
 
 # Prompt 1
 template_question = """What is the name of the famous scientist who developed the theory of general relativity?
@@ -36,5 +48,5 @@ input_data = {"scientist": scientist}
 # Run the LLMChain for the second prompt
 response_fact = chain_fact.run(input_data)
 
-print("Scientist:", scientist)
-print("Fact:", response_fact)
+print("Scientist:", scientist.text)
+print("Fact:", response_fact.text)

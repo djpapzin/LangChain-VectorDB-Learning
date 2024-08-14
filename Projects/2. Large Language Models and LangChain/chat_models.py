@@ -1,14 +1,19 @@
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import (
+from langchain.chat_models import ChatGemini # Import ChatGemini instead of ChatOpenAI
+from langchain.schema import ( # Import HumanMessage and SystemMessage from langchain.schema
   HumanMessage,
   SystemMessage
 )
+import getpass
+import os
 
-chat = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+if "GEMINI_API_KEY" not in os.environ:
+    os.environ["GEMINI_API_KEY"] = getpass.getpass("Provide your GEMINI API Key")
 
-messages = [
-	SystemMessage(content="You are a helpful assistant that translates English to French."),
-	HumanMessage(content="Translate the following sentence: I love programming.")
+chat = ChatGemini(model_name="gemini-1.5-pro-exp-0801", temperature=0) # Create a ChatGemini object with the specified model name and temperature
+
+messages = [ # Create a list of messages
+	SystemMessage(content="You are a helpful assistant that translates English to French."), # Create a SystemMessage with the content "You are a helpful assistant that translates English to French."
+	HumanMessage(content="Translate the following sentence: I love programming.") # Create a HumanMessage with the content "Translate the following sentence: I love programming."
 ]
 
-chat(messages)
+chat(messages) # Call the chat object with the list of messages

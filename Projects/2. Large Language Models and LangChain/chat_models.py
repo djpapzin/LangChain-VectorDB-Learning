@@ -1,18 +1,16 @@
-from langchain_google_genai import GoogleGenerativeAI # Import GoogleGenerativeAI from langchain_google_genai 
-from langchain.schema import ( # Import HumanMessage and SystemMessage from langchain.schema
-  HumanMessage,
-  SystemMessage
-)
-from dotenv import load_dotenv # Import load_dotenv
+# Import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI 
+# Import load_dotenv
+from dotenv import load_dotenv 
 import os
 
-load_dotenv() # Load environment variables from .env file
+# Load environment variables from .env file
+load_dotenv() 
 
-llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GOOGLE_API_KEY")) # Create GoogleGenerativeAI instance
+# Create ChatGoogleGenerativeAI instance
+llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GEMINI_API_KEY")) 
 
-messages = [ # Create a list of messages
-	SystemMessage(content="You are a helpful assistant that translates English to French."), # Create a SystemMessage with the content "You are a helpful assistant that translates English to French."
-	HumanMessage(content="Translate the following sentence: I love programming.") # Create a HumanMessage with the content "Translate the following sentence: I love programming."
-]
-
-llm(messages) # Call the llm object with the list of messages
+# Use invoke for single messages
+response = llm.invoke("Translate the following sentence: I love programming.") 
+# Print the generated response text only
+print(response.content) 
